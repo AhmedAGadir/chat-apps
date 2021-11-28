@@ -1,0 +1,39 @@
+chat based application
+
+special things:
+- one to one chat
+- group messaging
+- sent, delivered, read receipts
+- online/last seen 
+- image/video sharing
+- chats are temporary/permanent
+
+
+ONE TO ONE CHAT 
+
+- each phone connects to a gateway
+- sessions microservice keeps a map somewhere of which phone is connected to which gateway 
+- a sends a message via http with the id of B to the server/microservice sends the message to B
+
+however there is a problem as servers cant send messages to clients, it only goes one way.
+some of the strategies to overcome this are:
+- long pulling (B periodically asks the server if there are new messages for it, which can then be sent in a HTTP response)
+but this is not real time 
+
+
+Websockets are the solution (TCP).
+they all clients to send messages to servers and vice-versa
+
+when B gets sent the message we can also send a parralell response to A saying it got sent (Sent receipt)
+when B receives it can send back a response to the server which will get sent back to A (received receipt)
+the moment the chat is open we can send a read receipt to the server, which gets sent to a
+
+
+
+LAST SEEN/ONLINE 
+
+whenever A does any activity - sends or reads a message - we need to save/update this on a table somewhere - key value pair with a timestamp
+B can then request this information when it opens up a chat with A 
+if the timestamp is less than 1 minute, just say its online 
+
+we can keep a last seen microservice which tracts user activity 
